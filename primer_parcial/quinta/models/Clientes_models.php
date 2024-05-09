@@ -1,21 +1,26 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+namespace App\Models;
 
-class Clientes_model extends CI_Model {
+use CodeIgniter\Model;
 
-    public function obtener_clientes() {
-        $this->db->select('personas.nombre, personas.paterno, personas.materno, personas.departamento, cuentas_bancarias.tipo_cuenta, cuentas_bancarias.saldo, cuentas_bancarias.id_cuenta');
-        $this->db->from('personas');
-        $this->db->join('cuentas_bancarias', 'personas.id_persona = cuentas_bancarias.id_persona');
-        $this->db->where('personas.rol', 'cliente');
-        $query = $this->db->get();
-        return $query->result_array();
+class Clientes_model extends Model {
+
+    protected $table = 'personas';
+    protected $primaryKey = 'id_persona';
+    protected $allowedFields = ['id_persona', 'nombre', 'paterno', 'materno', 'departamento', 'rol'];
+
+    public function obtener_clientes_con_cuentas() {
+        return $this->db->table($this->table)
+                        ->select('personas.*, cuentas_bancarias.tipo_cuenta, cuentas_bancarias.saldo')
+                        ->join('cuentas_bancarias', 'personas.id_persona = cuentas_bancarias.id_persona', 'left')
+                        ->where('personas.rol', 'cliente')
+                        ->get()
+                        ->getResultArray();
     }
 
-    public function eliminar_cuenta($id_cuenta) {
-        $this->db->where('id_cuenta', $id_cuenta);
-        $this->db->delete('cuentas_bancarias');
+    public function eliminar_cliente_y_cuenta($id_persona) {
+        $this->where('id_persona', $id_persona)->delete();
+        $this->db->table('cuentas_bancarias')->where('id_persona', $id_persona)->delete();
     }
 
 }
-?>
