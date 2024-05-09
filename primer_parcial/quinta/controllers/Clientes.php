@@ -1,21 +1,23 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+namespace App\Controllers;
 
-class Clientes extends CI_Controller {
+use CodeIgniter\Controller;
+use App\Models\Clientes_model;
 
-    public function __construct() {
-        parent::__construct();
-        $this->load->model('Clientes_model');
+class Clientes extends Controller {
+
+    public function index () {
+        $clientes_model = new Clientes_model();
+        $datos['personas'] = $clientes_model->obtener_clientes_con_cuentas();
+        
+        return view('clientes/code', $datos);
     }
 
-    public function index() {
-        $data['clientes'] = $this->Clientes_model->obtener_clientes();
-        $this->load->view('clientes/index', $data);
-    }
-
-    public function eliminar_cuenta($id_cuenta) {
-        $this->Clientes_model->eliminar_cuenta($id_cuenta);
-        redirect('clientes');
+    public function borrar($id_persona=null) {
+        $clientes_model = new Clientes_model();
+        $clientes_model->eliminar_cliente_y_cuenta($id_persona);
+        
+        return redirect()->to(base_url('lista'));
     }
 
 }
