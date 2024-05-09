@@ -9,6 +9,12 @@
             width: 100%;
             border-collapse: collapse;
         }
+        a {
+            text-decoration: none;
+            color: red;
+            font-family: Arial;
+            font-weight: 800;
+        }
 
         th,
         td {
@@ -38,7 +44,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($clientes as $cliente): ?>
+            <?php foreach ($personas as $cliente): ?>
                 <tr>
                     <td><?= $cliente['nombre'] ?></td>
                     <td><?= $cliente['paterno'] ?></td>
@@ -46,10 +52,11 @@
                     <td><?= $cliente['departamento'] ?></td>
                     <td><?= $cliente['tipo_cuenta'] ?></td>
                     <td><?= $cliente['saldo'] ?></td>
-                    <td><a href="<?= base_url('clientes/eliminar_cuenta/' . $cliente['id_cuenta']) ?>">Eliminar</a></td>
+                    <td><a href="<?= base_url('borrar/' . $cliente['id_persona']) ?>">Eliminar</a></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </body>
 </html>
+
